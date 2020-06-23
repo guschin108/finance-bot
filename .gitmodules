@@ -1,0 +1,3 @@
+[submodule "excur"]
+	path = excur
+	url = https://github.com/guschin108/excur-script
