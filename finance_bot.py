@@ -14,15 +14,16 @@ logger = logging.getLogger(__name__)
 
 main_kb = [['Обмен валют']]
 
-def start(update, context):
+def bot_start(update, context):
     kb = main_kb
     user = update.message.from_user.first_name
     update.message.reply_text(
         'Привет, ' + user + '!\n'
         '\nЯ простой финансовый бот 💰\n'
         '\nСписок команд:'
-        '\nОбмен валют - Показать лучший курс обмена валют',
-        reply_markup=ReplyKeyboardMarkup(kb, one_time_keyboard=True))
+        '\n*Обмен валют* - Показать лучший курс обмена валют',
+        reply_markup=ReplyKeyboardMarkup(kb, one_time_keyboard=True),
+        parse_mode=ParseMode.MARKDOWN)
 
 
 CITY, CURRENCY = range(2)
@@ -121,13 +122,15 @@ def exchange_rate_make_answer(context):
         raise
 
     if currency == 'Доллар США':
-        return ('Продать Доллар США : ' + excur_usd_best_buy_get(data) + '\n'
-                'Купить Доллар США  : ' + excur_usd_best_sell_get(data) + '\n'
-                '\nИнформация получена с сайта excur.ru/' + city)
+        return ('Продать Доллар США : *' + excur_usd_best_buy_get(data) + '*\n'
+                'Купить Доллар США  : *' + excur_usd_best_sell_get(data) + '*\n'
+                '\nИнформация получена с сайта '
+                '[excur.ru](https://excur.ru/' + city + ')')
     elif currency == 'Евро':
-        return ('Продать Евро : ' + excur_euro_best_buy_get(data) + '\n'
-                'Купить Евро  : ' + excur_euro_best_sell_get(data) + '\n'
-                '\nИнформация получена с сайта excur.ru/' + city)
+        return ('Продать Евро : *' + excur_euro_best_buy_get(data) + '*\n'
+                'Купить Евро  : *' + excur_euro_best_sell_get(data) + '*\n'
+                '\nИнформация получена с сайта '
+                '[excur.ru](https://excur.ru/' + city + ')')
     raise
 
 def exchange_rate_done(context):
@@ -151,7 +154,9 @@ def exchange_rate_currency(update, context):
     kb = main_kb
     update.message.reply_text(
         answer,
-        reply_markup=ReplyKeyboardMarkup(kb, one_time_keyboard=True))
+        reply_markup=ReplyKeyboardMarkup(kb, one_time_keyboard=True),
+        parse_mode=ParseMode.MARKDOWN,
+        disable_web_page_preview=True)
 
     exchange_rate_done(context)
     return ConversationHandler.END
@@ -183,7 +188,7 @@ def main(token):
     )
 
     dp = updater.dispatcher
-    dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('start', bot_start))
     dp.add_handler(exchange_handler)
 
     updater.start_polling(poll_interval=1, timeout=5, bootstrap_retries=3)
