@@ -190,6 +190,7 @@ def main(token):
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', bot_start))
     dp.add_handler(exchange_handler)
+    dp.add_handler(MessageHandler(Filters.text, bot_start))
 
     updater.start_polling(poll_interval=1, timeout=5, bootstrap_retries=3)
 
