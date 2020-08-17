@@ -67,6 +67,7 @@ cities_ru_en = {
 }
 
 cities_ru = list(cities_ru_en.keys())
+cities_ru.sort()
 
 city_fkb = [[x] for x in list(cities_ru)]
 city_fkb.append(['Отмена'])
